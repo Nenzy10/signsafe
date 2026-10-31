@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SignSafe — Before you sign, know what you're signing.</title>
+<meta name="description" content="Free instant decoder for wallet signing requests. Paste the signature request, permit, approval or message your wallet shows you — SignSafe explains in plain English what it actually lets someone do, before you sign. Nothing leaves your browser.">
+<meta property="og:title" content="SignSafe — is this signature safe? Check before you sign.">
+<meta property="og:description" content="Paste the signing request your wallet shows. Get what it really does, in plain English, in seconds.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://signsafe-app.netlify.app/logo-480.png">
+<link rel="icon" type="image/png" href="/logo-480.png">
+<link rel="apple-touch-icon" href="/logo-480.png">
+<style>
+  :root{--bg:#0b0e14;--card:#12161f;--card2:#171c28;--line:#232a3a;--text:#e8ecf4;--mut:#9aa6bb;--green:#46a758;--amber:#ffb224;--orange:#f76b15;--red:#e5484d;--accent:#5b8cff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;line-height:1.55}
+  a{color:var(--accent)}
+  .wrap{max-width:880px;margin:0 auto;padding:0 18px}
+  header{padding:20px 0 6px;display:flex;justify-content:space-between;align-items:center}
+  .logo{font-weight:800;font-size:22px;letter-spacing:-.5px}
+  .logo span{color:var(--accent)}
+  .logo small{display:block;font-size:11px;color:var(--mut);font-weight:500;letter-spacing:.4px}
+  .badge{font-size:12px;color:var(--mut);border:1px solid var(--line);padding:5px 10px;border-radius:99px}
+  .hero{text-align:center;padding:34px 0 8px}
+  .hero h1{font-size:clamp(28px,5.4vw,44px);line-height:1.12;letter-spacing:-1px}
+  .hero h1 em{font-style:normal;color:var(--amber)}
+  .hero p{color:var(--mut);max-width:640px;margin:14px auto 0;font-size:16px}
+  .stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 4px}
+  .stats div{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px 14px;font-size:13px;color:var(--mut)}
+  .stats b{color:var(--text)}
+  .checker{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:22px 0}
+  textarea{width:100%;background:#0d1017;border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:14.5px;padding:14px;font-family:ui-monospace,Menlo,Consolas,monospace;min-height:150px;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+  .go{flex:1;min-width:180px;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:15px;font-size:17px;font-weight:700;cursor:pointer}
+  .go:hover{filter:brightness(1.1)}
+  .examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .ex{background:transparent;border:1px dashed var(--line);color:var(--mut);border-radius:99px;padding:6px 12px;font-size:12.5px;cursor:pointer}
+  .ex:hover{color:var(--text);border-color:var(--accent)}
+  .privacy{font-size:12.5px;color:var(--mut);margin-top:10px}
+  .limit{font-size:13px;color:var(--amber);margin-top:10px;display:none}
+  #result{display:none;margin-top:20px;border-top:1px solid var(--line);padding-top:20px}
+  .verdict{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .dial{width:104px;height:104px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0d1017;flex:none}
+  .dial b{font-size:34px;line-height:1}
+  .dial small{color:var(--mut);font-size:11px}
+  .vlabel{font-size:22px;font-weight:800;letter-spacing:-.3px}
+  .vsub{color:var(--mut);font-size:14px;max-width:480px}
+  h3.sec{font-size:15px;text-transform:uppercase;letter-spacing:.8px;color:var(--mut);margin:22px 0 10px}
+  .does li{background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:10px 14px;margin-bottom:8px;font-size:14.5px;list-style:none}
+  .flag{background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .flag.red{border-left-color:var(--red)}
+  .flag b{font-size:15px}
+  .flag .w{font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:1px 8px;margin-left:8px;vertical-align:middle}
+  .flag p{color:var(--mut);font-size:14px;margin-top:4px}
+  ul.adv{list-style:none}
+  ul.adv li{padding:8px 12px;border-radius:10px;margin-bottom:8px;font-size:14.5px;background:#1c1410;border:1px solid #3a2415}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .btn2{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:11px;padding:11px 16px;font-size:14px;font-weight:600;cursor:pointer}
+  .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:8px 0 4px}
+  .how div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .how b{display:block;margin-bottom:5px}
+  .how p{color:var(--mut);font-size:14px}
+  .price{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:8px 0}
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .plan.pro{border-color:var(--accent)}
+  .plan h4{font-size:17px} .plan .amt{font-size:28px;font-weight:800;margin:6px 0}
+  .plan ul{list-style:none;color:var(--mut);font-size:14px}
+  .plan li{padding:3px 0}
+  .paybox{background:#0d1017;border:1px dashed var(--line);border-radius:12px;padding:12px;font-size:13.5px;color:var(--mut);margin-top:12px;word-break:break-all}
+  .paybox b{color:var(--text)}
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin-bottom:10px}
+  summary{cursor:pointer;font-weight:600}
+  details p{color:var(--mut);font-size:14.5px;margin-top:7px}
+  .disc{font-size:13px;color:var(--mut);border:1px solid var(--line);border-radius:12px;padding:14px;margin:20px 0;background:var(--card)}
+  footer{padding:22px 0 40px;color:var(--mut);font-size:13.5px;text-align:center}
+  .unlock{display:none;margin-top:12px;gap:8px}
+  .unlock input{flex:1;background:#0d1017;border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:15px;padding:12px;font-family:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">Sign<span>Safe</span><small>BEFORE YOU SIGN, KNOW WHAT YOU'RE SIGNING.</small></div>
+    <div class="badge">Free · No sign-up · Private</div>
+  </header>
+
+  <section class="hero">
+    <h1>Your wallet shows you a signature. It doesn't show you <em>what it means.</em></h1>
+    <p>Most crypto theft today isn't hacking — it's one tricked signature. A permit, an approval, a "verification" — and a wallet is empty. Paste the signing request here before you sign, and SignSafe translates it into plain English: who gets control, of what, for how long.</p>
+    <div class="stats">
+      <div><b>#1</b> way wallets get drained: malicious signatures</div>
+      <div><b>3</b> request types decoded — permits, approvals, messages</div>
+      <div><b>0</b> data stored — checks run in your browser</div>
+    </div>
+  </section>
+
+  <section class="checker" id="checker">
+    <textarea id="input" placeholder="Paste what your wallet is asking you to sign — the typed-data JSON, the approval details, the message text, or the raw data. Copy it exactly as shown, then check before you touch 'Sign'."></textarea>
+    <div class="row">
+      <button class="go" id="go">Decode it before I sign</button>
+    </div>
+    <div class="examples">
+      <span style="font-size:12.5px;color:var(--mut)">Try an example:</span>
+      <button class="ex" data-ex="permit">Unlimited permit</button>
+      <button class="ex" data-ex="bait">Post-hack "verify wallet"</button>
+      <button class="ex" data-ex="approveall">Approve-all request</button>
+      <button class="ex" data-ex="login">Normal sign-in</button>
+    </div>
+    <p class="privacy">🔒 Private by design: the decoding runs entirely in your browser. What you paste is never uploaded or stored. SignSafe never asks you to connect a wallet — connecting is the risky step. Checking is not.</p>
+    <p class="limit" id="limitNote"></p>
+    <div class="unlock" id="unlockRow">
+      <input type="text" id="proCode" placeholder="Pro access code">
+      <button class="btn2" id="unlockBtn">Unlock Pro</button>
+    </div>
+
+    <div id="result">
+      <div class="verdict">
+        <div class="dial" id="dial"><b id="scoreNum">0</b><small>RISK / 100</small></div>
+        <div>
+          <div class="vlabel" id="verdictLabel"></div>
+          <div class="vsub" id="verdictSub"></div>
+        </div>
+      </div>
+      <h3 class="sec">What this signature actually does</h3>
+      <ul class="does" id="does"></ul>
+      <h3 class="sec">Risk flags</h3>
+      <div id="flags"></div>
+      <div id="adviceWrap"><h3 class="sec">What to do</h3><ul class="adv" id="advice"></ul></div>
+      <div class="actions">
+        <button class="btn2" id="copyBtn">📋 Copy result summary</button>
+        <button class="btn2" id="againBtn">Check another</button>
+      </div>
+    </div>
+  </section>
+
+  <h3 class="sec">How it works</h3>
+  <div class="how">
+    <div><b>1 · Copy the request</b><p>From your wallet's signature screen — the JSON, the approval, or the message. Don't sign it yet.</p></div>
+    <div><b>2 · Read it in English</b><p>SignSafe decodes permits, approvals, typed data and raw calldata, and names the spender, the amount and the deadline — the three places risk hides.</p></div>
+    <div><b>3 · Then decide</b><p>A signature is a permission slip. Ten seconds of reading is the difference between using a dApp and handing over your wallet.</p></div>
+  </div>
+
+  <h3 class="sec">Pricing</h3>
+  <div class="price">
+    <div class="plan">
+      <h4>Free</h4><div class="amt">$0</div>
+      <ul><li>3 checks every day</li><li>Full plain-English decode</li><li>Permits, approvals, messages, calldata</li><li>No wallet connection, no account</li></ul>
+    </div>
+    <div class="plan pro">
+      <h4>Pro</h4><div class="amt">$9<span style="font-size:14px;color:var(--mut)"> /month</span></div>
+      <ul><li>Unlimited checks</li><li>Full plain-English decode</li><li>Priority pattern updates as drainer tactics change</li><li>For traders, collectors and anyone who signs daily</li></ul>
+      <div class="paybox">
+        Pay with <b>USDC on Base</b> to:<br><b>0x48E78fFC3f02A65c6A9718b4dc293ae14cBb7985</b><br><br>
+        Then send your transaction hash to our Telegram assistant <b>@NenzyBrownAssistantBot</b> (send /order) or by email to <b>njakoiemmanuel10@gmail.com</b> — your Pro code arrives within 24 hours, usually much faster.
+      </div>
+    </div>
+    <div class="plan">
+      <h4>Teams &amp; Communities</h4><div class="amt">$29<span style="font-size:14px;color:var(--mut)"> /month</span></div>
+      <ul><li>Everything in Pro</li><li>Codes for up to 10 members</li><li>For trading groups, NFT communities and DAO teams whose members sign every day</li></ul>
+    </div>
+  </div>
+
+  <h3 class="sec">Questions</h3>
+  <details><summary>Why do drainers use signatures instead of hacking?</summary><p>Because it's easier. A signed permit or approval is a legitimate blockchain permission — you granted it yourself. There's nothing to "hack back" and usually nothing to reverse. That's why the defence has to happen in the ten seconds before you sign.</p></details>
+  <details><summary>What should I paste, exactly?</summary><p>Whatever your wallet shows you: the typed-data JSON (wallets show it under "message" or "details"), the approval screen's contents, or the message text. The more complete the paste, the more precise the decode. A bare risk word with no spender or amount can't be fully decoded.</p></details>
+  <details><summary>I already signed something bad. What now?</summary><p>Act in this order: (1) move any remaining funds to a brand-new wallet, (2) from a clean setup, revoke the old approvals — revoke.cash shows them by wallet address, (3) never sign anything sent to you about "recovering" the loss — recovery scams are the second wave.</p></details>
+  <details><summary>Does SignSafe ever need my wallet connected or my keys?</summary><p>Never. No connect button, no keys, no seed phrase — ever. Any tool that asks for those to "check" a signature is the thing you should be checking.</p></details>
+
+  <div class="disc"><b>Honest limits:</b> SignSafe is an educational decoding tool, not a security authority and not a guarantee. It explains the known structures drainers use. A clean result means no drainer patterns were detected in what you pasted — not that a request is certainly safe. If a signature involves real money and anything feels off, don't sign, and verify through the official app.</div>
+
+  <footer>
+    SignSafe — built in Dubai by <b>NenzyBrown</b>, founder of ProofReceipt and ScamOrNot (<a href="https://scamornot-app.netlify.app">scamornot-app.netlify.app</a>).<br>
+    Made in the week of the largest exchange hack in crypto history — because the second wave always targets users, with a signature.
+    <div style="margin-top:10px"><a href="https://fazier.com" target="_blank" rel="noopener"><img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" alt="Launched on Fazier" style="height:28px;width:auto;vertical-align:middle"></a></div>
+  </footer>
+</div>
+<script src="engine.js"></script>
+<script>
+(function(){
+  var input=document.getElementById('input'), go=document.getElementById('go');
+  var result=document.getElementById('result');
+  var EXAMPLES={
+    permit: JSON.stringify({domain:{name:'QuickSwap Rewards',chainId:1,verifyingContract:'0x1111111111111111111111111111111111111111'},types:{Permit:[{name:'owner',type:'address'},{name:'spender',type:'address'},{name:'value',type:'uint256'},{name:'nonce',type:'uint256'},{name:'deadline',type:'uint256'}]},primaryType:'Permit',message:{owner:'0x2222222222222222222222222222222222222222',spender:'0x3333333333333333333333333333333333333333',value:'115792089237316195423570985008687907853269984665640564039457584007913129639935',nonce:'0',deadline:'1893456000'}},null,2),
+    bait: 'URGENT NOTICE from the Binance security team: after the hack your wallet must be verified. Sign this message to verify your wallet and protect your funds. Users who verify within 24 hours will receive compensation for the incident.',
+    approveall: '0xa22cb465' + '000000000000000000000000' + '3333333333333333333333333333333333333333' + '0000000000000000000000000000000000000000000000000000000000000001',
+    login: 'Sign in to Example App\nNonce: 84f2c91d\nIssued At: 2026-10-31T06:00:00Z\nExpiration Time: 2026-10-31T07:00:00Z'
+  };
+  var COLORS={danger:'#e5484d',high:'#f76b15',caution:'#ffb224',ok:'#46a758'};
+  var SUBS={
+    danger:'This signature hands over real control of your assets. Do not sign it. If a site, message or "support agent" sent you here, that source is the threat.',
+    high:'Serious drainer patterns. Stop. Only proceed if you can verify — through the official app, opened by you — that this exact request is genuine.',
+    caution:'There is something here worth understanding before you sign. Read the decode lines above — especially the spender and the amount.',
+    ok:'No known drainer patterns in what you pasted. Still confirm the site asking is the site you meant to use.'
+  };
+  document.querySelectorAll('.ex').forEach(function(b){
+    b.addEventListener('click',function(){ input.value=EXAMPLES[b.dataset.ex]; run(); });
+  });
+  function todayKey(){return 'ss_day_'+new Date().toISOString().slice(0,10);}
+  function isPro(){return localStorage.getItem('ss_pro')==='1';}
+  function usedToday(){return parseInt(localStorage.getItem(todayKey())||'0',10);}
+  function refreshLimit(){
+    var note=document.getElementById('limitNote'), row=document.getElementById('unlockRow');
+    if(isPro()){note.style.display='block';note.textContent='✓ Pro active — unlimited checks on this device.';row.style.display='none';return;}
+    var left=Math.max(0,3-usedToday());
+    note.style.display='block';
+    note.textContent=left>0?('Free checks left today: '+left+' of 3. Pro removes the limit.'):'You have used today\'s 3 free checks. Enter a Pro code below, or come back tomorrow.';
+    if(left===0) row.style.display='flex';
+  }
+  document.getElementById('unlockBtn').addEventListener('click',function(){
+    var code=document.getElementById('proCode').value.trim();
+    if(/^SS-PRO-[A-Z0-9]{4,}$/i.test(code)){localStorage.setItem('ss_pro','1');alert('Pro unlocked on this device. Thank you for supporting SignSafe.');}
+    else alert('That code format is not recognised. Your code looks like SS-PRO-XXXX and arrives after your USDC payment is confirmed.');
+    refreshLimit();
+  });
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  var lastResult=null;
+  function run(){
+    var val=input.value.trim();
+    if(!val){alert('Paste the signing request first — then check before you sign.');return;}
+    if(!isPro()&&usedToday()>=3){refreshLimit();document.getElementById('unlockRow').style.display='flex';return;}
+    var r=SIGNSAFE_ANALYZE(val);
+    lastResult=r;
+    if(!isPro()){localStorage.setItem(todayKey(),String(usedToday()+1));}
+    document.getElementById('scoreNum').textContent=r.score;
+    var dial=document.getElementById('dial');
+    dial.style.background='conic-gradient('+COLORS[r.band]+' '+(r.score*3.6)+'deg,#0d1017 0deg)';
+    document.getElementById('verdictLabel').textContent=r.label;
+    document.getElementById('verdictLabel').style.color=COLORS[r.band];
+    document.getElementById('verdictSub').textContent=SUBS[r.band];
+    var dl=document.getElementById('does'); dl.innerHTML='';
+    r.doesWhat.forEach(function(d){var li=document.createElement('li');li.textContent=d;dl.appendChild(li);});
+    var fh=document.getElementById('flags'); fh.innerHTML='';
+    if(r.flags.length){
+      r.flags.forEach(function(f){
+        var d=document.createElement('div');
+        d.className='flag'+(f.sev==='red'?' red':'');
+        d.innerHTML='<b>'+esc(f.title)+'</b><span class="w">+'+f.points+' risk</span><p>'+esc(f.why)+'</p>';
+        fh.appendChild(d);
+      });
+    } else {
+      fh.innerHTML='<div class="flag"><b>No risk flags raised</b><p>Nothing in this request matches the drainer patterns SignSafe checks for.</p></div>';
+    }
+    var al=document.getElementById('advice'); al.innerHTML='';
+    r.advice.forEach(function(a){var li=document.createElement('li');li.textContent=a;al.appendChild(li);});
+    result.style.display='block';
+    result.scrollIntoView({behavior:'smooth',block:'nearest'});
+    refreshLimit();
+  }
+  go.addEventListener('click',run);
+  document.getElementById('againBtn').addEventListener('click',function(){input.value='';result.style.display='none';input.focus();window.scrollTo({top:0,behavior:'smooth'});});
+  document.getElementById('copyBtn').addEventListener('click',function(){
+    if(!lastResult)return;
+    var lines=['SignSafe check — Risk '+lastResult.score+'/100: '+lastResult.label];
+    lastResult.doesWhat.forEach(function(d){lines.push('• '+d);});
+    lastResult.flags.forEach(function(f){lines.push('⚠ '+f.title);});
+    lines.push('Checked with SignSafe — before you sign, know what you\'re signing.');
+    navigator.clipboard.writeText(lines.join('\n')).then(function(){alert('Result summary copied.');});
+  });
+  refreshLimit();
+})();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SignSafe","applicationCategory":"SecurityApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free decoder for crypto wallet signing requests: permits, approvals and messages explained in plain English before you sign."}
+</script>
+</body>
+</html>
